@@ -31,6 +31,11 @@ gem 'paperclip', '~> 4.2.1'   # For uploading images, thumbnails etc (requires I
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 gem 'bcrypt',               '3.1.7' #for hashing password
+
+gem 'faker',                '1.4.2' # just fakes by creating fakes! nice!
+gem 'will_paginate',           '3.0.7'
+gem 'bootstrap-will_paginate', '0.0.10'
+
 group :development, :test do
   gem 'sqlite3',     '1.3.9'
   gem 'byebug',      '3.4.0'
