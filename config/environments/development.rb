@@ -28,6 +28,17 @@ Rails.application.configure do
 }
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
+  # config/environments/production.rb
+config.paperclip_defaults = {
+  :storage => :s3,
+
+  :s3_credentials => {
+    :bucket => 'examopedia',
+    :access_key_id => '###',
+    :secret_access_key =>'###'
+  }
+}
+
 
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load

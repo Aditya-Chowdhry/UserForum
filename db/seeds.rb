@@ -24,3 +24,10 @@ User.create!(name:  "Example User",
                activated: true,
                activated_at: Time.zone.now)
 end
+
+users = User.order(:created_at).take(6)
+50.times do
+  title = Faker::Lorem.sentence(3, true, 4) #=> "Accusantium tantillus dolorem timor."
+  content = Faker::Lorem.paragraph
+  users.each { |user| user.posts.create!(title: title,content: content) }
+end
