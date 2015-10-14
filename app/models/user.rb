@@ -1,6 +1,9 @@
 class User < ActiveRecord::Base
+  acts_as_followable
+  acts_as_follower
   has_many :posts, dependent: :destroy
- attr_accessor :remember_token, :activation_token, :reset_token
+  attr_accessor :remember_token, :activation_token, :reset_token
+
 
   before_save   :downcase_email
   before_create :create_activation_digest
@@ -74,9 +77,11 @@ class User < ActiveRecord::Base
     # Defines a proto-feed.
   # See "Following users" for the full implementation.
   def feed
-    Post.where("user_id = ?", id)
+    following_ids = "SELECT followable_id FROM follows
+                     WHERE  followable_type='User' and follower_id = :user_id"
+    Post.where("user_id IN (#{following_ids})
+                     OR user_id = :user_id", user_id: id)
   end
-
 
     private
 

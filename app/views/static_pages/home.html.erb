@@ -1,18 +1,48 @@
 <% provide(:title, "Home") %>
+<!-- Le styles -->
+<link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
 <% if logged_in? %>
   <div class="row">
     <aside class="col-md-4">
       <section class="user_info">
         <%= render 'shared/user_info' %>
       </section>
+      <section class="stats">
+        <%= render 'shared/stats' %>
+      </section>
       <section class="post_form">
         <%= render 'shared/post_form' %>
       </section>
     </aside>
+    <!--Tabbed Pane--->
     <div class="col-md-8">
-      <h3>Post Feed</h3>
-      <%= render 'shared/feed' %>
+    <ul id="tabs" class="nav nav-tabs" data-tabs="tabs">
+        <li class="active"><a href="#friend" data-toggle="tab"><h3>Friend's Feed</h3></a></li>
+        <li><a href="#common" data-toggle="tab"><h3>Common Feed</h3></a></li>
+    </ul>
+    <div id="my-tab-content" class="tab-content">
+
+        <div class="tab-pane active" id="friend">
+            <%= render 'shared/feed' %>
+        </div>
+        <div class="tab-pane" id="common">
+            <%= render 'shared/common_feed' %>
+        </div>
+
+
     </div>
+
+
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        $('#tabs').tab();
+    });
+</script>
+</div> <!-- container -->
+
+
+
   </div>
 <% else %>
 <div class="center jumbotron">

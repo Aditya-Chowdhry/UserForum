@@ -1,9 +1,9 @@
 class UsersController < ApplicationController
   #before_action :set_user, only: [:show, :edit, :update, :destroy]
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy,:following, :followers,:follow, :unfollow]
   before_action :correct_user, only:[:edit, :update]
   before_action :admin_user,     only: :destroy
-
+  require 'will_paginate/array'
   # GET /users
   # GET /users.json
   def index
@@ -62,6 +62,49 @@ end
     User.find(params[:id]).destroy
     flash[:success] = "User deleted"
     redirect_to users_url
+  end
+
+def follow
+  @user = User.find(params[:id])
+
+  if current_user
+    if current_user == @user
+      flash[:error] = "You cannot follow yourself."
+    else
+      current_user.follow(@user)
+      #RecommenderMailer.new_follower(@user).deliver if @user.notify_new_follower
+      flash[:notice] = "You are now following #{@user.name}."
+      redirect_to @user
+    end
+  else
+    flash[:error] = "You must <a href='/users/sign_in'>login</a> to follow #{@user.name}."
+  end
+end
+
+def unfollow
+  @user = User.find(params[:id])
+
+  if current_user
+    current_user.stop_following(@user)
+    flash[:notice] = "You are no longer following #{@user.name}."
+    redirect_to @user
+  else
+    flash[:error] = "You must <a href='/users/sign_in'>login</a> to unfollow #{@user.monniker}.".html_safe
+  end
+end
+
+def following
+    @title = "Following"
+    @user  = User.find(params[:id])
+    @users = @user.following_users.paginate(page: params[:page],per_page: 6)
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user  = User.find(params[:id])
+    @users = @user.followers_by_type('User').paginate(page: params[:page],per_page: 6)
+    render 'show_follow'
   end
 
   private
